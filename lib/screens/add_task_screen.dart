@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import '../models/task.dart';
+import '../models/task_data.dart';
 
 class AddTaskScreen extends StatelessWidget {
-  final Function addTaskCallback;
-  const AddTaskScreen(this.addTaskCallback);
-
   @override
   Widget build(BuildContext context) {
     late String newTaskName;
@@ -36,21 +37,28 @@ class AddTaskScreen extends StatelessWidget {
                 newTaskName = value;
               },
             ),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.lightBlueAccent),
-                elevation: MaterialStateProperty.resolveWith((states) => 6),
-                shadowColor:
-                    MaterialStateColor.resolveWith((states) => Colors.black),
-              ),
-              onPressed: () {
-                addTaskCallback(newTaskName);
+            Consumer<TaskData>(
+              builder: (context, taskData, child) {
+                return TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.lightBlueAccent),
+                    elevation: MaterialStateProperty.resolveWith((states) => 6),
+                    shadowColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.black),
+                  ),
+                  onPressed: () {
+                    // addTaskCallback(newTaskName);
+                    //add the new task to the list vis the provider package
+                    taskData.addTask(newTaskName);
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Add',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
               },
-              child: const Text(
-                'Add',
-                style: TextStyle(color: Colors.white),
-              ),
             )
           ],
         ),
